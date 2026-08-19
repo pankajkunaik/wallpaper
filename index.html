@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wallpaper Haven — Stunning Wallpapers for Desktop & Mobile</title>
+  <meta name="description" content="Discover and download thousands of stunning free wallpapers for desktop and mobile. Powered by Pexels." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       API KEY SETUP MODAL (First Run)
+  ═══════════════════════════════════════════ -->
+  <div id="api-key-modal" class="api-modal-overlay hidden">
+    <div class="api-modal-card">
+      <div class="api-modal-glow"></div>
+      <div class="api-modal-icon">🔑</div>
+      <h2 class="api-modal-title">Connect to Pexels</h2>
+      <p class="api-modal-desc">
+        Wallpaper Haven uses the <strong>Pexels API</strong> to fetch millions of high-quality wallpapers. Enter your free API key to get started.
+      </p>
+      <div class="api-modal-steps">
+        <div class="api-step">
+          <span class="api-step-num">1</span>
+          <span>Visit <a href="https://www.pexels.com/api/" target="_blank" rel="noopener">pexels.com/api</a></span>
+        </div>
+        <div class="api-step">
+          <span class="api-step-num">2</span>
+          <span>Sign up free &amp; copy your API key</span>
+        </div>
+        <div class="api-step">
+          <span class="api-step-num">3</span>
+          <span>Paste it below and hit Launch</span>
+        </div>
+      </div>
+      <div class="api-input-group">
+        <input
+          id="api-key-input"
+          type="text"
+          placeholder="Paste your Pexels API key here…"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button id="api-key-submit" class="btn-launch">
+          <span>Launch App</span>
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+      <p id="api-key-error" class="api-key-error hidden">Invalid or empty API key. Please try again.</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MAIN APP (hidden until API key is set)
+  ═══════════════════════════════════════════ -->
+  <div id="app" class="hidden">
+
+    <!-- HEADER / NAV -->
+    <header class="site-header" id="site-header">
+      <nav class="nav-inner">
+        <a href="#" class="nav-logo" id="logo-home">
+          <div class="logo-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="9" height="13" rx="2" fill="url(#lg1)"/><rect x="13" y="3" width="9" height="7" rx="2" fill="url(#lg2)"/><rect x="13" y="12" width="9" height="9" rx="2" fill="url(#lg3)"/><rect x="2" y="18" width="9" height="3" rx="1.5" fill="url(#lg4)"/><defs><linearGradient id="lg1" x1="2" y1="3" x2="11" y2="16" gradientUnits="userSpaceOnUse"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#6366f1"/></linearGradient><linearGradient id="lg2" x1="13" y1="3" x2="22" y2="10" gradientUnits="userSpaceOnUse"><stop stop-color="#f472b6"/><stop offset="1" stop-color="#a78bfa"/></linearGradient><linearGradient id="lg3" x1="13" y1="12" x2="22" y2="21" gradientUnits="userSpaceOnUse"><stop stop-color="#60a5fa"/><stop offset="1" stop-color="#34d399"/></linearGradient><linearGradient id="lg4" x1="2" y1="18" x2="11" y2="21" gradientUnits="userSpaceOnUse"><stop stop-color="#fbbf24"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs></svg>
+          </div>
+          <span class="logo-text">Wallpaper<span class="logo-accent">Haven</span></span>
+        </a>
+
+        <div class="nav-search-wrap">
+          <div class="nav-search" id="nav-search-box">
+            <svg class="search-icon-sm" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input id="nav-search-input" type="text" placeholder="Search wallpapers…" autocomplete="off" />
+            <button id="nav-search-clear" class="search-clear hidden" aria-label="Clear search">✕</button>
+          </div>
+        </div>
+
+        <div class="nav-actions">
+          <button id="fav-btn" class="nav-btn fav-nav-btn" title="Favorites">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            <span id="fav-count" class="fav-count">0</span>
+          </button>
+          <button id="settings-btn" class="nav-btn" title="Change API Key">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" id="hero-section">
+      <div class="hero-bg-slider" id="hero-bg-slider">
+        <div class="hero-bg-slide active" id="hero-slide-0"></div>
+        <div class="hero-bg-slide" id="hero-slide-1"></div>
+        <div class="hero-bg-slide" id="hero-slide-2"></div>
+      </div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <p class="hero-eyebrow">✦ Millions of free wallpapers</p>
+        <h1 class="hero-title">Find Your Perfect <br/><span class="hero-gradient-text">Wallpaper</span></h1>
+        <p class="hero-subtitle">Curated high-resolution wallpapers for desktop &amp; mobile, powered by Pexels</p>
+        <div class="hero-search-box" id="hero-search-box">
+          <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input id="hero-search-input" type="text" placeholder="Search for nature, city, space, abstract…" autocomplete="off" />
+          <button id="hero-search-btn" class="hero-search-btn">Search</button>
+        </div>
+        <div class="hero-tags" id="hero-tags">
+          <span class="hero-tag-label">Popular:</span>
+          <button class="hero-tag" data-q="nature">🌿 Nature</button>
+          <button class="hero-tag" data-q="city night">🏙️ City</button>
+          <button class="hero-tag" data-q="galaxy space">🌌 Space</button>
+          <button class="hero-tag" data-q="abstract art">🎨 Abstract</button>
+          <button class="hero-tag" data-q="ocean waves">🌊 Ocean</button>
+          <button class="hero-tag" data-q="minimal dark">🖤 Dark</button>
+        </div>
+      </div>
+      <div class="hero-scroll-hint">
+        <div class="scroll-arrow"></div>
+      </div>
+    </section>
+
+    <!-- FILTER BAR -->
+    <section class="filter-bar" id="filter-bar">
+      <div class="filter-inner">
+        <!-- Device Tabs -->
+        <div class="device-tabs">
+          <button class="device-tab active" data-device="all" id="tab-all">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            All
+          </button>
+          <button class="device-tab" data-device="landscape" id="tab-desktop">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            Desktop
+          </button>
+          <button class="device-tab" data-device="portrait" id="tab-mobile">
+            <svg width="14" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="18" r="1" fill="currentColor" stroke="none"/></svg>
+            Mobile
+          </button>
+        </div>
+
+        <!-- Category Pills -->
+        <div class="category-pills" id="category-pills">
+          <button class="cat-pill active" data-cat="curated">🔥 Trending</button>
+          <button class="cat-pill" data-cat="nature">🌿 Nature</button>
+          <button class="cat-pill" data-cat="space galaxy">🌌 Space</button>
+          <button class="cat-pill" data-cat="city architecture">🏙️ City</button>
+          <button class="cat-pill" data-cat="abstract art">🎨 Abstract</button>
+          <button class="cat-pill" data-cat="ocean beach">🌊 Ocean</button>
+          <button class="cat-pill" data-cat="mountains landscape">⛰️ Mountains</button>
+          <button class="cat-pill" data-cat="forest trees">🌲 Forest</button>
+          <button class="cat-pill" data-cat="minimal dark">🖤 Dark</button>
+          <button class="cat-pill" data-cat="anime">✨ Anime</button>
+          <button class="cat-pill" data-cat="cars automotive">🚗 Cars</button>
+          <button class="cat-pill" data-cat="flowers botanical">🌸 Flowers</button>
+        </div>
+
+        <!-- Sort Controls -->
+        <div class="sort-controls">
+          <button id="favorites-view-btn" class="sort-btn">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            My Favorites
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- RESULTS INFO BAR -->
+    <div class="results-bar" id="results-bar">
+      <span id="results-label">Curated wallpapers</span>
+      <span id="results-count"></span>
+    </div>
+
+    <!-- GALLERY GRID -->
+    <main class="gallery-container" id="gallery-container">
+      <div class="masonry-grid" id="masonry-grid">
+        <!-- Cards injected by JS -->
+      </div>
+
+      <!-- LOADING SKELETONS -->
+      <div class="skeleton-grid" id="skeleton-grid">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card tall"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card tall"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card tall"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card tall"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card tall"></div>
+        <div class="skeleton-card"></div>
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div class="empty-state hidden" id="empty-state">
+        <div class="empty-icon">🔍</div>
+        <h3>No wallpapers found</h3>
+        <p>Try a different search term or category</p>
+        <button class="btn-outline" id="empty-reset-btn">Browse Trending</button>
+      </div>
+
+      <!-- LOAD MORE SENTINEL -->
+      <div id="load-more-sentinel" class="load-sentinel"></div>
+      <div class="load-more-spinner hidden" id="load-more-spinner">
+        <div class="spinner"></div>
+        <span>Loading more wallpapers…</span>
+      </div>
+    </main>
+
+    <!-- WALLPAPER DETAIL MODAL -->
+    <div class="modal-overlay hidden" id="wallpaper-modal" role="dialog" aria-modal="true" aria-label="Wallpaper preview">
+      <div class="modal-backdrop" id="modal-backdrop"></div>
+      <div class="modal-card" id="modal-card">
+        <button class="modal-close" id="modal-close" aria-label="Close">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+
+        <!-- Image Preview -->
+        <div class="modal-preview" id="modal-preview">
+          <img id="modal-img" src="" alt="" loading="lazy" />
+          <div class="modal-img-overlay">
+            <div class="color-palette" id="color-palette"></div>
+          </div>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="modal-info">
+          <div class="modal-info-top">
+            <div class="modal-photographer">
+              <div class="photographer-avatar" id="photographer-avatar"></div>
+              <div>
+                <p class="photographer-name" id="photographer-name">—</p>
+                <a class="photographer-link" id="photographer-link" href="#" target="_blank" rel="noopener">View on Pexels ↗</a>
+              </div>
+            </div>
+            <button class="modal-fav-btn" id="modal-fav-btn" title="Add to favorites">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            </button>
+          </div>
+
+          <div class="modal-meta">
+            <div class="meta-item">
+              <span class="meta-label">Resolution</span>
+              <span class="meta-value" id="meta-resolution">—</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Orientation</span>
+              <span class="meta-value" id="meta-orientation">—</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Photo ID</span>
+              <span class="meta-value" id="meta-id">—</span>
+            </div>
+          </div>
+
+          <div class="modal-alt" id="modal-alt"></div>
+
+          <div class="download-section">
+            <h4 class="download-title">Download Wallpaper</h4>
+            <div class="download-grid" id="download-grid">
+              <!-- Injected by JS -->
+            </div>
+          </div>
+
+          <div class="modal-share">
+            <button class="share-btn" id="copy-link-btn">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+              Copy Link
+            </button>
+            <a class="share-btn" id="pexels-link" href="#" target="_blank" rel="noopener">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              View on Pexels
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- BACK TO TOP -->
+    <button class="back-to-top hidden" id="back-to-top" aria-label="Back to top">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <p>Powered by <a href="https://www.pexels.com" target="_blank" rel="noopener">Pexels</a> · All photos are free to use · <a href="https://www.pexels.com/license/" target="_blank" rel="noopener">License</a></p>
+    </footer>
+
+  </div><!-- /#app -->
+
+  <script src="app.js"></script>
+</body>
+</html>
